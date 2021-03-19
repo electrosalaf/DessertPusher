@@ -3,6 +3,7 @@ package com.example.dessertpusher
 import android.content.ActivityNotFoundException
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -12,10 +13,14 @@ import androidx.lifecycle.LifecycleObserver
 import com.example.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
 
+/** onCreate Log tag **/
+const val TAG = "MainActivity"
+
 /** onSaveInstanceState Bundle Keys **/
 const val KEY_REVENUE = "revenue_key"
 const val KEY_DESSERT_SOLD = "dessert_sold_key"
 const val KEY_TIMER_SECONDS = "timer_seconds_key"
+
 
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
@@ -25,6 +30,8 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     //  Contain all views
     private lateinit var binding: ActivityMainBinding
+
+
 
     /**  Desserts Data **/
 
@@ -57,7 +64,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.i("onCreate called")
+        Log.d(TAG, "onCreated called")
 
         //  Use Data Binding to get reference to the views
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -65,9 +72,6 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         binding.dessertButton.setOnClickListener{
             onDessertClicked()
         }
-
-        //  Setup dessertTimer, passing in the lifecycle
-        dessertTimer = DessertTimer(this.lifecycle)
 
         //  If there is a savedInstanceState bundle, then you're "restarting" the activity
         //  If there isn't a bundle, then it's a fresh start
@@ -90,7 +94,6 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         /**
          * Updates the score when the dessert is clicked. Possibly shows a new dessert.
          */
-
         private fun onDessertClicked() {
 
             //  Update the score
@@ -177,6 +180,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     /** Lifecycle methods **/
     override fun onStart() {
         super.onStart()
+        //Log.d(TAG, "onStart called")
         Timber.i("onStart called")
     }
 
@@ -192,6 +196,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     override fun onStop() {
         super.onStop()
+        dessertTimer.stopTimer()
         Timber.i("onStop called")
     }
 
